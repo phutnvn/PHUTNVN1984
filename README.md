@@ -78,35 +78,39 @@
 
 | Vai trò | Email đăng nhập | Mật khẩu | Đường dẫn |
 | :--- | :--- | :--- | :--- |
-| **Giảng viên / Admin** | `admin@trinhminhphu.edu.vn` | `AdminPassword2026@` | `http://localhost:3000/admin/login` |
+| **Giảng viên / Admin** | `phutm@tnus.edu.vn` | `AdminPassword2026@` | `http://localhost:3000/admin/login` |
 
 ---
 
-## 🛠️ HƯỚNG DẪN CÀI ĐẶT & CHẠY LOCAL
+## 🛠️ HƯỚNG DẪN CLONE TỪ GITHUB & CHẠY LOCAL
 
 ### Yêu cầu môi trường
-- **Node.js**: Phiên bản 18.x trở lên (đã kiểm thử hoàn hảo trên Node v24).
-- **Trình duyệt**: Chrome, Edge, Firefox, Safari (hỗ trợ Responsive Mobile / Tablet / Desktop).
+- **Git**: Đã cài đặt trên máy.
+- **Node.js**: Phiên bản 18.x trở lên (khuyên dùng Node 20+ hoặc 22+).
 
 ### Các bước khởi chạy:
 ```bash
-# 1. Di chuyển vào thư mục dự án
-cd d:\PHUTNVN1984
+# 1. Clone mã nguồn từ GitHub về máy
+git clone https://github.com/PHUTNVN/PHUTNVN1984.git
+cd PHUTNVN1984
 
-# 2. Cài đặt các gói phụ thuộc (nếu chưa cài)
+# 2. Cài đặt các gói thư viện
 npm install
 
-# 3. Đồng bộ cơ sở dữ liệu và nạp dữ liệu mẫu
+# 3. Tạo file cấu hình môi trường từ mẫu
+copy .env.example .env
+
+# 4. Khởi tạo cơ sở dữ liệu SQLite và nạp dữ liệu mẫu
 npx prisma db push
 node prisma/seed.js
+node scripts/setup_offline.js
 
-# 4. Chạy hệ thống ở chế độ Development
+# 5. Khởi chạy máy chủ phát triển
 npm run dev
-
-# Hoặc khởi chạy phiên bản Production (đã biên dịch sẵn)
-npm run start
 ```
-Truy cập trình duyệt tại: **`http://localhost:3000`**
+
+> **Mẹo chạy nhanh 1-Click trên Windows:**
+> Sau khi `npm install`, bạn chỉ cần nhấp đúp vào tệp **`CHAY_OFFLINE.bat`**, hệ thống sẽ tự động build và mở trình duyệt web tại `http://localhost:3000`.
 
 ---
 
