@@ -1,0 +1,134 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("LECTURER") // LECTURER, ADMIN
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Course {
+  id             String         @id @default(cuid())
+  code           String         @unique // e.g. "IT3010"
+  name           String
+  description    String
+  targetStudents String?
+  objectives     String?        // Target learning outcomes
+  syllabus       String?        // Course syllabus/overview
+  semester       String?        // "Học kỳ 1"
+  academicYear   String?        // "2025 - 2026"
+  isActive       Boolean        @default(true)
+  assignments    Assignment[]
+  resources      Resource[]
+  announcements  Announcement[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model Assignment {
+  id              String       @id @default(cuid())
+  title           String
+  courseId        String
+  course          Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  description     String
+  requirements    String?
+  deadline        DateTime
+  acceptedFormats String       @default("PDF,DOC,DOCX,PPT,PPTX,XLS,XLSX,ZIP,RAR,7Z,PY,JAVA,CPP,JS,TS")
+  maxFileSizeMb   Int          @default(50)
+  status          String       @default("OPEN") // OPEN, CLOSING_SOON, CLOSED
+  submissions     Submission[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model Submission {
+  id               String     @id @default(cuid())
+  receiptCode      String     @unique // e.g. "REC-938210"
+  studentName      String
+  studentId        String     // MSSV
+  studentClass     String     // e.g. "D21CNTT01"
+  studentEmail     String
+  assignmentId     String
+  assignment       Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  fileName         String     // Stored unique filename
+  fileOriginalName String     // Original name when uploaded
+  filePath         String     // Absolute or relative path in private storage
+  fileSize         Int        // In bytes
+  mimeType         String
+  notes            String?
+  submittedAt      DateTime   @default(now())
+  isLate           Boolean    @default(false)
+  score            Float?
+  feedback         String?
+  gradingStatus    String     @default("PENDING") // PENDING, GRADED, NEEDS_REVISION
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@index([studentId])
+  @@index([receiptCode])
+  @@index([assignmentId])
+}
+
+model Resource {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  courseId     String?
+  course       Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  fileType     String   // PDF, DOCX, PPTX, XLSX, LINK
+  fileUrl      String
+  isRestricted Boolean  @default(false) // Public vs restricted for enrolled students
+  downloadCount Int     @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  courseId  String?
+  course    Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LecturerProfile {
+  id              String   @id @default("default")
+  fullName        String   @default("TRINH MINH PHU")
+  title           String   @default("Giảng viên | Công nghệ thông tin")
+  tagline         String   @default("Giáo dục và sáng tạo — Chia sẻ tri thức, đồng hành cùng thế hệ tương lai")
+  email           String   @default("phu.tm@university.edu.vn")
+  phone           String   @default("0900.000.000")
+  workplace       String   @default("Khoa Công nghệ Thông tin - Trường Đại học")
+  officeLocation  String   @default("Phòng 402, Tòa nhà A1, Khu giảng đường")
+  bio             String   @default("Giảng viên với nhiều năm kinh nghiệm nghiên cứu và giảng dạy trong lĩnh vực Công nghệ thông tin, Phát triển phần mềm, Hệ cơ sở dữ liệu và Trí tuệ nhân tạo. Tận tâm hỗ trợ sinh viên phát triển tư duy giải quyết vấn đề và năng lực ứng dụng thực tiễn.")
+  educationJson   String   @default("[]")
+  researchJson    String   @default("[]")
+  teachingExpJson String   @default("[]")
+  activitiesJson  String   @default("[]")
+  socialLinksJson String   @default("[]")
+  avatarUrl       String?
+  updatedAt       DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  fullName  String
+  email     String
+  subject   String
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
