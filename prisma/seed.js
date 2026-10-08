@@ -65,7 +65,7 @@ async function main() {
 
   const teachingExpData = [
     {
-      role: 'Giảng viên Cơ hữu',
+      role: 'Giảng viên',
       organization: 'Khoa Công nghệ Thông tin - Trường Đại học',
       period: '2015 — Hiện tại',
       description: 'Giảng dạy các học phần Lập trình Web, Hệ CSDL, Cấu trúc Dữ liệu & Giải thuật. Hướng dẫn hơn 80 khóa luận tốt nghiệp.',

@@ -132,7 +132,7 @@ export default async function HomePage() {
                     <div className="text-white">
                       <p className="font-bold text-lg">ThS. Trịnh Minh Phú</p>
                       <p className="text-xs text-blue-200">
-                        Giảng viên Cơ hữu — Đại học
+                        Giảng viên
                       </p>
                     </div>
                   </div>
