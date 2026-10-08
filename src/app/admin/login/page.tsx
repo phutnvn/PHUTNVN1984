@@ -14,8 +14,8 @@ import {
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("phutm@tnus.edu.vn");
-  const [password, setPassword] = useState("AdminPassword2026@");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -87,7 +87,7 @@ export default function AdminLoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@trinhminhphu.edu.vn"
+                  placeholder="name@tnus.edu.vn"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-[#2F80ED] focus:outline-none"
                   required
                 />
@@ -104,7 +104,7 @@ export default function AdminLoginPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Nhập mật khẩu..."
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-2 focus:ring-[#2F80ED] focus:outline-none"
                   required
                 />
@@ -119,13 +119,6 @@ export default function AdminLoginPage() {
               <span>{loading ? "Đang xác thực..." : "Đăng nhập Cổng Quản trị"}</span>
             </button>
           </form>
-
-          {/* Quick note on credentials */}
-          <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 text-[11px] text-gray-500">
-            <p className="font-semibold text-[#123B65]">Tài khoản mẫu đã thiết lập sẵn:</p>
-            <p>Email: <code className="text-[#2F80ED]">phutm@tnus.edu.vn</code></p>
-            <p>Mật khẩu: <code className="text-[#2F80ED]">AdminPassword2026@</code></p>
-          </div>
 
           <div className="text-center pt-2">
             <Link
