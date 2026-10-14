@@ -103,7 +103,7 @@ export default async function HomePage() {
                 </div>
                 <div className="flex items-center">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 mr-2" />
-                  <span>{profile?.officeLocation || "Phường Phan Đình Phùng, Thái Nguyên"}</span>
+                  <span>{profile?.officeLocation || "Phòng 504, Khu nhà Hiệu bộ"}</span>
                 </div>
                 <div className="flex items-center">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 mr-2" />

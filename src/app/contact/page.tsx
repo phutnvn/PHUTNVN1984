@@ -153,6 +153,20 @@ export default function ContactPage() {
 
                 <div className="flex items-start space-x-3.5">
                   <div className="w-9 h-9 rounded-xl bg-white text-[#2F80ED] border border-gray-200 flex items-center justify-center shrink-0">
+                    <Building2 className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-gray-400 block uppercase">
+                      Văn phòng làm việc
+                    </span>
+                    <p className="font-semibold text-[#123B65] mt-0.5">
+                      Phòng 504, Khu nhà Hiệu bộ
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3.5">
+                  <div className="w-9 h-9 rounded-xl bg-white text-[#2F80ED] border border-gray-200 flex items-center justify-center shrink-0">
                     <Clock className="w-4 h-4" />
                   </div>
                   <div>
