@@ -154,7 +154,8 @@ export default function AdminAssignmentsPage() {
       if (res.ok) {
         fetchAssignments();
       } else {
-        alert("Lỗi khi xóa bài tập.");
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Lỗi khi xóa bài tập. Vui lòng thử lại.");
       }
     } catch {
       alert("Lỗi kết nối máy chủ.");
@@ -303,6 +304,7 @@ export default function AdminAssignmentsPage() {
                   className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs sm:text-sm focus:ring-2 focus:ring-[#2F80ED] focus:outline-none"
                   required
                 >
+                  <option value="" disabled>-- Chọn học phần --</option>
                   {courses.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.code} — {c.name}
