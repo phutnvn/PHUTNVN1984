@@ -43,9 +43,16 @@ export async function POST(req: NextRequest) {
     const zip = new JSZip();
 
     for (const sub of submissions) {
+      let fileData: Buffer | null = null;
       const fullPath = path.resolve(sub.filePath);
+
       if (fs.existsSync(fullPath)) {
-        const fileData = fs.readFileSync(fullPath);
+        fileData = fs.readFileSync(fullPath);
+      } else if (sub.fileData) {
+        fileData = Buffer.from(sub.fileData);
+      }
+
+      if (fileData) {
         // Clean filename for the zip entry: MSSV_HoTen_Receipt_FileName
         const safeStudentName = sub.studentName
           .normalize("NFD")

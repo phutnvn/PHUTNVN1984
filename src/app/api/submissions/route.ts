@@ -107,12 +107,21 @@ export async function POST(req: NextRequest) {
     const uniqueFileName = `${receiptCode}_${sanitizedBase}_${Date.now()}${sanitizedExt}`;
     const destinationPath = path.join(storageDir, uniqueFileName);
 
-    // Write file buffer to private disk
+    // Convert file to buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    fs.writeFileSync(destinationPath, buffer);
 
-    // 8. Record in database
+    // Try to write to local/tmp disk if possible
+    try {
+      if (!fs.existsSync(storageDir)) {
+        fs.mkdirSync(storageDir, { recursive: true });
+      }
+      fs.writeFileSync(destinationPath, buffer);
+    } catch (fsErr) {
+      console.warn("Filesystem write warning (normal on serverless):", fsErr);
+    }
+
+    // 8. Record in database with fileData binary backup for 100% cloud persistence
     const submission = await prisma.submission.create({
       data: {
         receiptCode,
@@ -124,6 +133,7 @@ export async function POST(req: NextRequest) {
         fileName: uniqueFileName,
         fileOriginalName: originalName,
         filePath: destinationPath,
+        fileData: buffer,
         fileSize: file.size,
         mimeType: file.type || "application/octet-stream",
         notes,
@@ -163,7 +173,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("Submission error:", error);
     return NextResponse.json(
-      { error: "Đã xảy ra lỗi trong quá trình tải lên hoặc xử lý bài nộp. Vui lòng thử lại sau." },
+      { error: error?.message || "Đã xảy ra lỗi trong quá trình tải lên hoặc xử lý bài nộp. Vui lòng thử lại sau." },
       { status: 500 }
     );
   }

@@ -37,17 +37,23 @@ export async function GET(
       );
     }
 
-    // Resolve file path
+    // Resolve file buffer from disk or database fileData
+    let fileBuffer: Buffer | null = null;
     const filePath = path.resolve(submission.filePath);
 
-    if (!fs.existsSync(filePath)) {
+    if (fs.existsSync(filePath)) {
+      fileBuffer = fs.readFileSync(filePath);
+    } else if (submission.fileData) {
+      fileBuffer = Buffer.from(submission.fileData);
+    }
+
+    if (!fileBuffer) {
       return NextResponse.json(
         { error: "Tệp tin không tồn tại trên hệ thống lưu trữ hoặc đã bị di chuyển." },
         { status: 404 }
       );
     }
 
-    const fileBuffer = fs.readFileSync(filePath);
     const encodedFileName = encodeURIComponent(submission.fileOriginalName);
 
     return new NextResponse(new Uint8Array(fileBuffer), {

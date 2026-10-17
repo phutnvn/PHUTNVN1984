@@ -64,6 +64,7 @@ model Submission {
   fileName         String     // Stored unique filename
   fileOriginalName String     // Original name when uploaded
   filePath         String     // Absolute or relative path in private storage
+  fileData         Bytes?     // Raw file data for cloud/serverless persistence
   fileSize         Int        // In bytes
   mimeType         String
   notes            String?
