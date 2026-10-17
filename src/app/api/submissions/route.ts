@@ -90,15 +90,14 @@ export async function POST(req: NextRequest) {
     const serverNow = new Date();
     const isLate = serverNow > new Date(assignment.deadline);
 
-    // 7. Save file securely into private storage directory
+    // 7. Save file securely (support both serverless /tmp and local storage)
     const storageDir = path.resolve(
-      process.cwd(),
-      process.env.STORAGE_DIR || "private_storage/submissions"
+      process.env.STORAGE_DIR && process.env.STORAGE_DIR.startsWith("/tmp")
+        ? process.env.STORAGE_DIR
+        : process.platform === "win32"
+        ? path.resolve(process.cwd(), "private_storage/submissions")
+        : "/tmp/submissions"
     );
-
-    if (!fs.existsSync(storageDir)) {
-      fs.mkdirSync(storageDir, { recursive: true });
-    }
 
     // Generate safe unique filename
     const receiptCode = generateReceiptCode();
@@ -111,14 +110,14 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Try to write to local/tmp disk if possible
+    // Write file to disk if directory is writable (e.g., /tmp on serverless or local folder on PC)
     try {
       if (!fs.existsSync(storageDir)) {
         fs.mkdirSync(storageDir, { recursive: true });
       }
       fs.writeFileSync(destinationPath, buffer);
     } catch (fsErr) {
-      console.warn("Filesystem write warning (normal on serverless):", fsErr);
+      console.warn("Filesystem write skipped (handled via database persistence):", fsErr);
     }
 
     // 8. Record in database with fileData binary backup for 100% cloud persistence
